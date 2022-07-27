@@ -6,5 +6,5 @@ import LoginPage from './components/LoginPage.vue'
 
 <template>
   <div></div>
-  <LoginPage msg="This is the login page" />
+  <LoginPage />
 </template>

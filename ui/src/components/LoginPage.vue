@@ -1,4 +1,5 @@
 <script setup>
+import InputField from './forms/InputField.vue'
 import { ref } from 'vue'
 
 defineProps({
@@ -17,18 +18,10 @@ const count = ref(0)
       <span class="text-gray-600">Don't have an account?</span>
       <a class="text-indigo-600 ml-2 hover:underline" href="/">Sign up</a>
     </p>
-    <div class="py-4">
-      <label class="block text-gray-600 text-sm font-semibold mb-2" for="username">
-        Phone number *
-      </label>
-      <input type="text" class="rounded-lg border-gray-300 ring-1 ring-gray-100">
-    </div>
-    <div class="py-2">
-      <label class="block text-gray-600 text-sm font-semibold mb-2" for="username">
-        Password *
-      </label>
-      <input type="password" class="rounded-lg border-gray-300 ring-1 ring-gray-100">
-    </div>
+    
+    <InputField label="Phone number *" type="text" />
+    <InputField label="Password *" type="password" />
+
     <div class="py-4 flex items-center justify-between">
       <label class="md:w-2/3 block text-gray-600 font-semibold">
         <input class="mr-2 rounded leading-tight" type="checkbox">
