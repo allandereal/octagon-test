@@ -1,12 +1,13 @@
 <script setup>
 import InputField from './forms/InputField.vue'
-import { ref } from 'vue'
+import  { useAuthStore }  from '../store/auth.js'
 
 defineProps({
   //msg: String
 })
 
-//onst count = ref(0) 
+const authStore = useAuthStore()
+
 </script>
 
 <template>
