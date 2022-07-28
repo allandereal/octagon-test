@@ -16,7 +16,7 @@ defineProps({
     <h1 class="text-gray-800 mt-4 text-3xl tracking-tighter font-bold">Sign up</h1>
     <p class="my-2 text-sm">
       <span class="text-gray-600">Already have an account?</span>
-      <a class="text-indigo-600 ml-2 hover:underline" href="/">Sign in</a>
+      <router-link class="text-indigo-600 ml-2 hover:underline" :to="{ name: 'login'}">Sign in</router-link>      
     </p>
 
     <InputField label="First name *" type="text" />
