@@ -8,7 +8,7 @@ defineProps({
 
 </script>
 <template>
-    <div class="py-4">
+    <div class="my-4">
       <label class="block text-gray-600 text-sm font-semibold mb-2" for="username">
         {{ label }}
       </label>
