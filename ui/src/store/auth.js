@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', {
         },
 
         fetchUser(state){
-            axios.get(process.env.API_URL + "user")
+            axios.get(process.env.VUE_APP_API_URL + "user")
             .then(response => {
                 this.setUser(response.data)
             })
@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', {
 
         loginUser(data) {
             setFormErrors({})
-            return axios.post(process.env.API_URL + "login", data)
+            return axios.post(process.env.VUE_APP_API_URL + "login", data)
               .then(response => {
                 setUser(response.data.user);
                 localStorage.setItem("authToken", response.data.token);
@@ -39,14 +39,14 @@ export const useAuthStore = defineStore('auth', {
           },
           signupUser(data) {
             this.setFormErrors({});
-            return axios.post(process.env.API_URL + "signup", data)
+            return axios.post(process.env.VUE_APP_API_URL + "signup", data)
               .then(response => {
                 setUser(response.data.user);
                 localStorage.setItem("authToken", response.data.token);
               });
           },
           logoutUser() {
-            axios.post(process.env.API_URL + "logout").then(() => {
+            axios.post(process.env.VUE_APP_API_URL + "logout").then(() => {
               setUse(null);
               localStorage.removeItem("authToken");
             });
