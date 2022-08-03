@@ -1,11 +1,18 @@
 <script setup>
-import { ref } from 'vue'
+import  { useAuthStore }  from '../store/auth.js'
+import { useRouter } from 'vue-router';
 
-defineProps({
-  //msg: String
-})
+const router = useRouter()
 
-//const count = ref(0) 
+const authStore = useAuthStore()
+const user = authStore.getUser;
+
+const logout = () => {
+  authStore.logoutUser().then(() => {
+    router.push({name: 'login'});
+  });
+}
+
 </script>
 
 <template>
@@ -15,9 +22,9 @@ defineProps({
     <div class="shadow border-b-1 border-gray-200 pb-4 absolute top-0 mt-24 flex flex-col md:flex-row items-center md:items-end space-y-4 md:space-x-8 w-full mx-auto md:px-20">
       <img class="w-36 h-36 rounded-full border-4 border-white" src="/avatar.jpg" alt="profile Picture">
       <div class="text-center md:text-left">
-        <h3 class="text-xl font-bold text-gray-700">Allan Ahumuza<span class="font-light text-lg">'s profile</span></h3>
-        <p class="text-gray-500 text-sm font-semibold">+256 755 337120</p>
-        <router-link class="text-sm text-indigo-600 hover:underline" :to="{ name: 'login'}">Logout</router-link>
+        <h3 class="text-xl font-bold text-gray-700">{{ user.first_name }} {{ user.last_name }}<span class="font-light text-lg">'s profile</span></h3>
+        <p class="text-gray-500 text-sm font-semibold">{{ user.phone }}</p>
+        <a href="#logout" @click.prevent="logout" class="cursor-pointer text-sm text-indigo-600 hover:underline">Logout</a>
     
       </div>
     </div>

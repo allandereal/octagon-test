@@ -1,13 +1,12 @@
 <script setup>
 import InputField from './forms/InputField.vue'
 import  { useAuthStore }  from '../store/auth.js'
-import { ref } from 'vue'
+import { useRouter } from 'vue-router';
+import { reactive } from 'vue'
 
-defineProps({
-  //msg: String
-})
+const router = useRouter()
 
-const formFields = ref({
+const formFields = reactive({
   'first_name': null,
   'last_name': null,
   'phone': null,
@@ -15,6 +14,14 @@ const formFields = ref({
 })
 
 const authStore = useAuthStore()
+
+const signup = () => {
+  authStore.signupUser(formFields).then((response) => {
+    if(response.status == 201){
+      router.push({name: 'login'});
+    }
+  });
+}
 
 </script>
 
@@ -27,12 +34,13 @@ const authStore = useAuthStore()
       <span class="text-gray-600">Already have an account?</span>
       <router-link class="text-indigo-600 ml-2 hover:underline" :to="{ name: 'login'}">Sign in</router-link>     
     </p>
-
-    <InputField label="First name *" type="text" v-model="formFields.first_name" />
-    <InputField label="Last name *" type="text" v-model="formFields.last_name" />
-    <InputField label="Phone number *" type="text" v-model="formFields.phone" />
-    <InputField label="Password *" type="password" v-model="formFields.password" />
-    <button class="bg-indigo-700 text-white w-full my-2 py-2 rounded-full hover:bg-indigo-700">Sign up</button>
+    <form @submit.prevent="signup">
+      <InputField label="First name *" name="first_name" type="text" v-model="formFields.first_name" />
+      <InputField label="Last name *" name="last_name" type="text" v-model="formFields.last_name" />
+      <InputField label="Phone number *" name="phone" type="text" v-model="formFields.phone" />
+      <InputField label="Password *" name="password" type="password" v-model="formFields.password" />
+      <button class="bg-indigo-700 text-white w-full my-2 py-2 rounded-full hover:bg-indigo-700" >Sign up</button>
+    </form>
   </div>
 </div>
 </template>

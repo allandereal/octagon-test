@@ -1,15 +1,22 @@
 <script setup>
 import InputField from './forms/InputField.vue'
-import { ref } from 'vue'
+import  { useAuthStore }  from '../store/auth.js'
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router';
 
-defineProps({
-  //msg: String
-})
+const authStore = useAuthStore()
+const router = useRouter()
 
-const formFields = ref({
+const formFields = reactive({
   'phone': null,
   'password': null,
 })
+
+const login = () => {
+  authStore.loginUser(formFields).then((response) => {
+      router.push({name: 'profile'});
+  });
+}
 
 </script>
 
@@ -22,10 +29,11 @@ const formFields = ref({
       <span class="text-gray-600">Don't have an account?</span>
       <router-link class="text-indigo-600 ml-2 hover:underline" :to="{ name: 'signup'}">Sign up</router-link>
     </p>
-
-    <InputField label="Phone number *" type="text" v-model="formFields.phone" />
-    <InputField label="Password *" type="password" v-model="formFields.password" />
-    <button class="bg-indigo-700 text-white w-full my-4 py-2 rounded-full hover:bg-indigo-700">Sign in</button>
+    <form @submit.prevent="login">
+      <InputField label="Phone number *" name="phone" type="text" v-model="formFields.phone" />
+      <InputField label="Password *" name="password" type="password" v-model="formFields.password" />
+      <button class="bg-indigo-700 text-white w-full my-4 py-2 rounded-full hover:bg-indigo-700">Sign in</button>
+    </form>
   </div>
 </div>
 </template>
