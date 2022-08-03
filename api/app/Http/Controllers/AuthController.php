@@ -45,4 +45,10 @@ class AuthController extends Controller
     {
         return response('user profile fetched successfully');
     }
+
+    public function logout(Request $request)
+    {
+        session()->flush();
+        return response('user logged out successfully');
+    }
 }
