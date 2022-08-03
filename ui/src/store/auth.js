@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        formErrors: [],
+        formErrors: {},
         user: null,
     }),
     getters: {
@@ -15,12 +15,12 @@ export const useAuthStore = defineStore('auth', {
             this.formErrors = errors;
         },
 
-        setUser(state, user){
-            state.user = user;
+        setUser(user){
+            this.user = user;
         },
 
         fetchUser(state){
-            axios.get(process.env.VUE_APP_API_URL + "user")
+            axios.get(import.meta.env.VITE_API_URL + "user")
             .then(response => {
                 this.setUser(response.data)
             })
@@ -29,27 +29,24 @@ export const useAuthStore = defineStore('auth', {
             });
         },
 
-        loginUser(data) {
-            setFormErrors({})
-            return axios.post(process.env.VUE_APP_API_URL + "login", data)
-              .then(response => {
-                setUser(response.data.user);
-                localStorage.setItem("authToken", response.data.token);
-              });
-          },
-          signupUser(data) {
-            this.setFormErrors({});
-            return axios.post(process.env.VUE_APP_API_URL + "signup", data)
-              .then(response => {
-                setUser(response.data.user);
-                localStorage.setItem("authToken", response.data.token);
-              });
-          },
-          logoutUser() {
-            axios.post(process.env.VUE_APP_API_URL + "logout").then(() => {
-              setUse(null);
-              localStorage.removeItem("authToken");
+        async loginUser(data) {
+            this.setFormErrors({})
+            return await axios.post(import.meta.env.VITE_API_URL + "login", data)
+            .then((response) => {
+              this.setUser(response.data.user);
+              localStorage.setItem("authToken", response.data.token);
             });
-          },
+        },
+
+        async signupUser(data) {
+          this.setFormErrors({});
+          return await axios.post(import.meta.env.VITE_API_URL + "signup", data);
+        },
+
+        async logoutUser() {
+          await axios.post(import.meta.env.VITE_API_URL + "logout");
+          this.setUser(null);
+          localStorage.removeItem("authToken");
+        },
     }
   });
