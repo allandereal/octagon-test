@@ -6,7 +6,11 @@ defineProps({
   //msg: String
 })
 
-//onst count = ref(0) 
+const formFields = ref({
+  'phone': null,
+  'password': null,
+})
+
 </script>
 
 <template>
@@ -19,8 +23,8 @@ defineProps({
       <router-link class="text-indigo-600 ml-2 hover:underline" :to="{ name: 'signup'}">Sign up</router-link>
     </p>
 
-    <InputField label="Phone number *" type="text" />
-    <InputField label="Password *" type="password" />
+    <InputField label="Phone number *" type="text" v-model="formFields.phone" />
+    <InputField label="Password *" type="password" v-model="formFields.password" />
     <button class="bg-indigo-700 text-white w-full my-4 py-2 rounded-full hover:bg-indigo-700">Sign in</button>
   </div>
 </div>
