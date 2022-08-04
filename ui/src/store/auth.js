@@ -19,14 +19,13 @@ export const useAuthStore = defineStore('auth', {
             this.user = user;
         },
 
-        fetchUser(state){
-            axios.get(import.meta.env.VITE_API_URL + "user")
-            .then(response => {
-                this.setUser(response.data)
-            })
-            .catch(() => {
-                localStorage.removeItem("authToken");
-            });
+        async fetchUser(state){
+            try {
+            const response = await axios.get(import.meta.env.VITE_API_URL + "profile");
+            this.setUser(response.data.data);
+          } catch {
+            localStorage.removeItem("authToken");
+          }
         },
 
         async loginUser(data) {
