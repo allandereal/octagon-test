@@ -33,22 +33,31 @@ class AuthController extends Controller
         
         Auth::loginUsingId($user->id);
 
-        session(['token' => Str::random(64), 'user' => $user->id]);
+        $user->auth_token = Str::random(64);
+        $user->save();
         
         return response()->json([
             'login' => 'successful',
-            'token' => session('token'),
+            'token' => $user->auth_token,
             'user' => $user->getAttributes()]);
     }
 
     public function profile(Request $request)
     {
-        return response('user profile fetched successfully');
+        $user = User::query()
+        ->where('auth_token', $request->token)
+        ->first();
+
+        return new UserResource($user);
     }
 
     public function logout(Request $request)
     {
-        session()->flush();
-        return response('user logged out successfully');
+        User::query()
+        ->where('auth_token', $request->token)
+        ->first()
+        ->update(['auth_token' => null]);
+
+        return response()->json(['logout' => 'successful']);
     }
 }
