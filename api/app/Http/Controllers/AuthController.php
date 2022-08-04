@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -28,7 +29,12 @@ class AuthController extends Controller
         $user = User::where('phone', $request->phone)->first();
 
         if(!Hash::check($request->password, $user->makeVisible(['password'])->password)){
-            return response()->json(['login' => 'failed', 'errors' => ['wrong credentials']], 403);
+            return response()
+            ->json([
+                'login' => 'failed',
+                'message' => 'wrong credentials',
+                'errors' => ['password' => ['password does not match']]
+            ], 422);
         }
         
         Auth::loginUsingId($user->id);
@@ -38,7 +44,9 @@ class AuthController extends Controller
         return response()->json([
             'login' => 'successful',
             'token' => $user->auth_token,
-            'user' => $user->getAttributes()]);
+            'user' => new UserResource($user)
+            ]
+        );
     }
 
     public function profile(Request $request)
@@ -54,7 +62,6 @@ class AuthController extends Controller
     {
         User::query()
         ->where('auth_token', $request->token)
-        ->first()
         ->update(['auth_token' => null]);
 
         return response()->json(['logout' => 'successful']);
