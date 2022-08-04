@@ -1,11 +1,16 @@
 <script setup>
 import  { useAuthStore }  from '../store/auth.js'
 import { useRouter } from 'vue-router';
+import { onBeforeMount } from 'vue';
 
 const router = useRouter()
 
 const authStore = useAuthStore()
 const user = authStore.getUser;
+
+onBeforeMount(() => {
+  authStore.fetchUser()
+});
 
 const logout = () => {
   authStore.logoutUser().then(() => {
