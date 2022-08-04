@@ -32,6 +32,7 @@ export const useAuthStore = defineStore('auth', {
             .then((response) => {
               this.setUser(response.data.user);
               localStorage.setItem("authToken", response.data.token);
+              localStorage.setItem("accessToken", response.data.access_token);
             }).catch((error) => {
               console.log(error)
             })
@@ -50,6 +51,7 @@ export const useAuthStore = defineStore('auth', {
 
           this.setUser(null);
           localStorage.removeItem("authToken");
+          localStorage.removeItem("accessToken");
         },
     }
   });
