@@ -29,12 +29,30 @@ Run the following commands in their order
 cd octagon-test/api
 cp .env.example .env
 composer install
+php artisan key:generate
+touch database/database.sqlite
 php artisan migrate
 php artisan passport:install
 php artisan serve
 ```
 After the above commands, a local server will start and is accessible at http:://127.0.0.1:8000`.
 Every request to the API will be made to this base URL.
+
+**For testing the backend**, please run the following commands
+
+```
+cp .env.example .env.testing
+php artisan key:generate --env=testing
+touch database/database.testing.sqlite
+```
+At this point,  copy the absolute path of the newly created test database `database/database.testing.sqlite`
+and create a `DB_DATABASE` variable with the copied path as the value in the `.env.testing` file in the project root folder.
+Then proceed with the commands below.
+```
+php artisan migrate --env=testing
+php artisan passport:install --env=testing
+php artisan test
+```
 
 #### Frontend
 Run the following commands in their order after going back to the project folder with `cd ..`
