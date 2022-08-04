@@ -6,10 +6,11 @@ import { onBeforeMount } from 'vue';
 const router = useRouter()
 
 const authStore = useAuthStore()
-const user = authStore.getUser;
 
 onBeforeMount(() => {
-  authStore.fetchUser()
+  if(!authStore.getUser){
+    authStore.fetchUser()
+  }
 });
 
 const logout = () => {
@@ -27,8 +28,8 @@ const logout = () => {
     <div class="shadow border-b-1 border-gray-200 pb-4 absolute top-0 mt-24 flex flex-col md:flex-row items-center md:items-end space-y-4 md:space-x-8 w-full mx-auto md:px-20">
       <img class="w-36 h-36 rounded-full border-4 border-white" src="/avatar.jpg" alt="profile Picture">
       <div class="text-center md:text-left">
-        <h3 class="text-xl font-bold text-gray-700">{{ user.first_name }} {{ user.last_name }}<span class="font-light text-lg">'s profile</span></h3>
-        <p class="text-gray-500 text-sm font-semibold">{{ user.phone }}</p>
+        <h3 class="text-xl font-bold text-gray-700">{{ authStore.getUser.first_name }} {{ authStore.getUser.last_name }}<span class="font-light text-lg">'s profile</span></h3>
+        <p class="text-gray-500 text-sm font-semibold">{{ authStore.getUser.phone }}</p>
         <a href="#logout" @click.prevent="logout" class="cursor-pointer text-sm text-indigo-600 hover:underline">Logout</a>
     
       </div>

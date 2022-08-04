@@ -1,11 +1,15 @@
 <script setup>
 import InputField from './forms/InputField.vue'
 import  { useAuthStore }  from '../store/auth.js'
-import { reactive, ref } from 'vue'
+import { onBeforeMount, reactive} from 'vue'
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore()
 const router = useRouter()
+
+onBeforeMount(() => {
+  authStore.setFormErrors({})
+});
 
 const formFields = reactive({
   'phone': null,
@@ -15,7 +19,7 @@ const formFields = reactive({
 const login = () => {
   authStore.loginUser(formFields).then((response) => {
       router.push({name: 'profile'});
-  });
+  })
 }
 
 </script>

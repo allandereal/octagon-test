@@ -2,9 +2,13 @@
 import InputField from './forms/InputField.vue'
 import  { useAuthStore }  from '../store/auth.js'
 import { useRouter } from 'vue-router';
-import { reactive } from 'vue'
+import { onBeforeMount, reactive } from 'vue'
 
 const router = useRouter()
+
+onBeforeMount(() => {
+  authStore.setFormErrors({})
+});
 
 const formFields = reactive({
   'first_name': null,
@@ -20,7 +24,9 @@ const signup = () => {
     if(response.status == 201){
       router.push({name: 'login'});
     }
-  });
+  }).catch((error) => {
+    console.log(error)
+  })
 }
 
 </script>

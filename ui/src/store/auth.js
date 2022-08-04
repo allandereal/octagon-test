@@ -19,31 +19,35 @@ export const useAuthStore = defineStore('auth', {
             this.user = user;
         },
 
-        async fetchUser(state){
-            try {
-            const response = await axios.get(import.meta.env.VITE_API_URL + "profile");
-            this.setUser(response.data.data);
-          } catch {
-            localStorage.removeItem("authToken");
-          }
+        async fetchUser(){
+            return await axios.post(import.meta.env.VITE_API_URL + "profile", {token: localStorage.getItem("authToken")})
+            .then((response) => {
+              this.setUser(response.data.data);
+            });
         },
-
+ 
         async loginUser(data) {
             this.setFormErrors({})
             return await axios.post(import.meta.env.VITE_API_URL + "login", data)
             .then((response) => {
               this.setUser(response.data.user);
               localStorage.setItem("authToken", response.data.token);
-            });
+            }).catch((error) => {
+              console.log(error)
+            })
         },
 
         async signupUser(data) {
           this.setFormErrors({});
-          return await axios.post(import.meta.env.VITE_API_URL + "signup", data);
+          return await axios.post(import.meta.env.VITE_API_URL + "signup", data)
+          .catch((error) => {
+            console.log(error)
+          })
         },
 
         async logoutUser() {
-          await axios.post(import.meta.env.VITE_API_URL + "logout");
+          await axios.post(import.meta.env.VITE_API_URL + "logout", {token: localStorage.getItem("authToken")});
+
           this.setUser(null);
           localStorage.removeItem("authToken");
         },
