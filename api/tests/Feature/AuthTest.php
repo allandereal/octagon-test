@@ -25,8 +25,8 @@ class AuthTest extends TestCase
 
     public function test_user_can_signup_using_api()
     {
-        $user = User::factory()->make(['phone' => '+256773020863']);
-        
+        $user = User::factory()->make();
+
         $response = $this->postJson('/api/signup', $user->getAttributes());
 
         $response
@@ -36,12 +36,25 @@ class AuthTest extends TestCase
 
     public function test_user_can_login_using_api()
     {
-        $phone = '+256755337120';
+        $user = User::factory()->create();
 
-        User::factory()->create(['phone' => $phone]);
-
-        $response = $this->postJson('/api/login', ['phone' => $phone, 'password' => 'password']);
+        $response = $this->postJson('/api/login', ['phone' => $user->phone, 'password' => 'password']);
 
         $response->assertStatus(200);
+    }
+
+    public function test_user_can_logout()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->postJson('/api/login', ['phone' => $user->phone, 'password' => 'password']);
+
+        $profileResponse = $this->withHeaders([
+            'Authorization' => 'Bearer '.$response->json()['access_token']
+        ])->postJson('/api/logout', ['token' => $response->json()['token']]);
+
+        return $profileResponse
+            ->assertStatus(200)
+            ->assertJsonPath('logout', 'successful');
     }
 }

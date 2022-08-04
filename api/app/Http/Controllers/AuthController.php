@@ -9,7 +9,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -36,14 +35,16 @@ class AuthController extends Controller
                 'errors' => ['password' => ['password does not match']]
             ], 422);
         }
-        
+
         Auth::loginUsingId($user->id);
 
+        $access_token =  $user->createToken('auth_token')->accessToken;
         $user->update(['auth_token' => Str::random(64)]);
-        
+
         return response()->json([
             'login' => 'successful',
             'token' => $user->auth_token,
+            'access_token' => $access_token,
             'user' => new UserResource($user)
             ]
         );
@@ -60,9 +61,13 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        User::query()
-        ->where('auth_token', $request->token)
-        ->update(['auth_token' => null]);
+        $user = User::query()
+            ->where('auth_token', $request->token)
+            ->first();
+
+        $user->update(['auth_token' => null]);
+
+        $request->user()->token()->revoke();
 
         return response()->json(['logout' => 'successful']);
     }
