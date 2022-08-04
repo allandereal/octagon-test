@@ -33,8 +33,7 @@ class AuthController extends Controller
         
         Auth::loginUsingId($user->id);
 
-        $user->auth_token = Str::random(64);
-        $user->save();
+        $user->update(['auth_token' => Str::random(64)]);
         
         return response()->json([
             'login' => 'successful',
